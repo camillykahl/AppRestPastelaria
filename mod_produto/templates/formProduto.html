@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Produtos{% endblock %}
+{% block style %}
+<style>
+    input:focus {
+        outline: none !important;
+        border: 1px solid red;
+        box-shadow: 0 0 10px #719ECE;
+    }
+
+    select:focus {
+        outline: none !important;
+        border: 1px solid red;
+        box-shadow: 0 0 10px #719ECE;
+    }
+    textarea:focus {
+        outline: none !important;
+        border: 1px solid red;
+        box-shadow: 0 0 10px #719ECE;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<form name="produto" id="produto" action="" method="POST">
+    <h1>Produtos</h1>
+    <br>
+    <label for="id">Código: </label>
+    <br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="id" id="id" value="" placeholder="Código" readonly><br><br>
+    <label for="nome">Nome Produto</label>
+    <br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="nome" id="nome" value="" placeholder="Nome Produto" maxlength="100" autofocus required>
+    <br><br>
+    <label for="descricao">Descrição: </label><br>
+        <textarea onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" name="descricao" id="descricao" maxlength="200" placeholder="Descreva algo aqui sobre o produto" required></textarea> 
+    <br><br>
+    <label for="valor">Valor: </label><br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="valor" id="valor" placeholder="Valor" maxlength="5" required>
+    <br><br>
+    <label for="imagem">Imagem do Produto: </label><br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="file" class="btn btn-success" name="imagem" id="imagem" required>
+    <br><br>
+    <button type='submit' class="btn btn-outline-success" name='salvaUsuarioDB' id='salvaUsuarioDB'><i
+        class='fas fa-save'></i> Salvar</button>
+    
+</form>
+
+{% endblock %}

@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Página Inicial</title>
-</head>
+{% block title %}Home{% endblock %}
 
-<body>
-    <h1>Rota da página inicial da nossa WEB APP</h1>
-    <h1>Uso de render_template</h1>
-    <h2>Camilly</h2>
-</body>
+{% block content %}
+<h1>Home</h1>
+<p class="important text-center">Seja bem vindo!</p>
 
-</html>
+{% endblock %}
