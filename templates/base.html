@@ -20,6 +20,7 @@
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='sweetalert2/sweetalert2.min.css') }}">
     
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
@@ -75,10 +76,52 @@
             
         </footer>
     {% endblock %}
-    {% block js %}{% endblock %}
+    {% block js %}
+   
+    {% endblock %}
+    <script src="{{ url_for('static', filename='jquery-3.6.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.maskedinput.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='fontawesome-free-6.2.0-web/js/all.js') }}"></script>
+    <script src="{{ url_for('static', filename='sweetalert2/sweetalert2.all.min.js') }}"></script>
+    {% if request.args.get('msg'): %}
+    <script>
+      Swal.fire({
+        title: 'Sucesso',
+        text: '{{ request.args.get("msg") }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    </script>
+    {% elif msg: %}
+    <script>
+      Swal.fire({
+        title: 'Sucesso',
+        text: '{{ msg }}',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    </script>
+    {% elif request.args.get('msgErro'): %}
+    <script>
+      Swal.fire({
+        title: 'Erro',
+        text: "{{ request.args.get('msgErro') }}",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    </script>
+    {% elif msgErro: %}
+    <script>
+      Swal.fire({
+        title: 'Erro',
+        text: '{{ msgErro }}',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    </script>
+    {% endif %}
     
-</body>
+</body> 
 
 </html>

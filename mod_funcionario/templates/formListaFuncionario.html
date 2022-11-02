@@ -5,6 +5,8 @@
 {% block content %}
 <form action="{{ url_for('funcionario.formFuncionario') }}" method="POST">
     <h1>Funcionários</h1>
+    <!--{{ result }}-->
+    <br>
     <button type="submit" class="btn btn-outline-danger" name="formNovo" ><i class="fas fa-circle-plus"></i> Novo Funcionário</button>
 </form>
 <br><br>
@@ -21,17 +23,21 @@
         </tr>
     </thead>
     <tbody>
+        {% if result %}
+        {% for row in result[0] %}
         <tr>
-            <th scope="row">...</th>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
+            <th scope="row">{{ row['id_funcionario'] }}</th>
+            <td>{{ row['nome'] }}</td>
+            <td>{{ row['matricula'] }}</td>
+            <td>{{ row['cpf'] }}</td>
+            <td>{{ row['telefone'] }}</td>
+            <td>{{ row['grupo'] }}</td>
+            <td>{{ row['senha'] }}</td>
             <td><i class="fas fa-edit"></i></td>
             <td><i class="fas fa-trash"></i></td>
         </tr>
+        {% endfor %}
+        {% endif %}
     </tbody>
 </table>
 {% endblock %}
