@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Produtos{% endblock %}
+
+{# ajusta a variáveis conforme novo ou edit #}
+{% set id = result[0].id_produto if result else '0' %}
+{% set nome = result[0].nome if result else '' %}
+{% set descricao = result[0].descricao if result else '' %}
+{% set valor_unitario = result[0].valor_unitario if result else '' %}
+{% set foto = result[0].foto if result else '' %}
+
 {% block style %}
 <style>
     input:focus {
@@ -13,36 +21,142 @@
         border: 1px solid red;
         box-shadow: 0 0 10px #719ECE;
     }
+
     textarea:focus {
         outline: none !important;
         border: 1px solid red;
         box-shadow: 0 0 10px #719ECE;
     }
+
+    #imagem {
+        background: #ddd;
+        width: 100px;
+        height: 90px;
+        display: block;
+    }
 </style>
 {% endblock %}
 {% block content %}
-<form name="produto" action="{{ url_for('produto.insert') }}" method="POST" enctype="multipart/form-data">
-    <h1>Produtos</h1>
+<form name="{{ 'formEditar' if result else 'formAdicionar' }}" id="{{ 'formEditar' if result else 'formAdicionar' }}"
+    method="POST" enctype="multipart/form-data">
+    <h1>Produtos- {{ "%s: %s" % ('Editar Registro', id) if result else 'Novo' }}</h1>
     <br>
-    <label for="id">Código: </label>
+    <label for="id_produto">Código: </label>
     <br>
-    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="id" id="id" value="" placeholder="Código" readonly><br><br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text"
+        name="id" id="id" value="{{ id }}" placeholder="Código" readonly><br><br>
     <label for="nome">Nome Produto</label>
     <br>
-    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="nome" id="nome" value="" placeholder="Nome Produto" maxlength="100" autofocus required>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text"
+        name="nome" id="nome" value="{{ nome }}" placeholder="Nome Produto" maxlength="100" autofocus required>
     <br><br>
     <label for="descricao">Descrição: </label><br>
-        <textarea onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" name="descricao" id="descricao" maxlength="200" placeholder="Descreva algo aqui sobre o produto" required></textarea> 
+    <textarea onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
+        name="descricao" id="descricao" maxlength="200" placeholder="Descreva algo aqui sobre o produto"
+        required> {{ descricao }} </textarea>
     <br><br>
-    <label for="valor">Valor: </label><br>
-    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="text" name="valor" id="valor" placeholder="Valor" maxlength="5" required>
+    <label for="valor_unitario">Valor: </label><br>
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="number"
+        name="valor_unitario" id="valor_unitario" value="{{ valor_unitario }}" placeholder="Valor" maxlength="5"
+        required>
     <br><br>
-    <label for="imagem">Imagem do Produto: </label><br>
-    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="file"  name="foto" accept="image/*" id="foto" >
+    <label for="foto">Imagem do Produto: </label><br>
+
+    <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';" type="file"
+        name="foto" accept="image/*" id="foto" onChange="img_pathUrl(this);" required> <br><br>
+    <img src="{{ foto }}" width="150" alt="Imagem" id="imagem">
     <br><br>
     <button type='submit' class="btn btn-outline-success" name='salvaUsuarioDB' id='salvaUsuarioDB'><i
-        class='fas fa-save'></i> Salvar</button>
-    
+            class='fas fa-save'></i> Salvar</button>
+
 </form>
+
+{% endblock %}
+{% block js %}
+<script>
+    
+    // JS-Ajax para adicionar
+    $('#formAdicionar').submit(function (e) {
+        e.preventDefault(); // parar o envio para poder fazer manualmente
+        var form = $('#formAdicionar')[0]; // captura o form
+        var data = new FormData(form); // cria o FormData {Object}
+        $.ajax({
+            type: "POST", enctype: 'multipart/form-data', url: "{{url_for('produto.insert')}}", data: data,
+            processData: false, // impedir que o jQuery transforme a "data" em querystring
+            contentType: false, // desabilitar o cabeçalho "Content-Type"
+            cache: false, // desabilitar o "cache"
+            timeout: 600000, // definir um tempo limite (opcional)
+            // manipular o retorno da requisição
+            success: function (data) {
+                if (!data.erro) {
+                    Swal.fire({
+                        title: '', text: 'ID' + data.msg.id + ', ' + data.msg.msg, icon: 'success', showCancelButton: false, confirmButtonColor: '#3085d6',
+
+                        cancelButtonColor: '#d33', confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProduto') }}");
+                        }
+                    });
+                }
+                else {
+                    Swal.fire(data.msgErro.msg, data.msgErro.erro, "error");
+                }
+            },
+            // manipular erros da requisição
+            error: function (e) {
+                console.log(e);
+            }
+        }) // fim execução ajax
+    }) // fim função evento submit
+    // incluir aqui a opção para editar
+    // Ajax para editar
+    // JS-Ajax para editar
+    $('#formEditar').submit(function (e) {
+        e.preventDefault(); // parar o envio para poder fazer manualmente
+        var form = $('#formEditar')[0]; // captura o form
+        var data = new FormData(form); // cria o FormData {Object}
+        // caso queira adicionar campos extras ao FormData
+        // data.append("customfield", "Este é um campo extra para teste");
+        $.ajax({
+            type: "POST", enctype: 'multipart/form-data', url: "{{url_for('produto.edit')}}", data: data,
+            processData: false, // impedir que o jQuery tranforma a "data" em querystring
+            contentType: false, // desabilitar o cabeçalho "Content-Type"
+            cache: false, // desabilitar o "cache"
+            timeout: 600000, // definir um tempo limite (opcional)
+            // manipular o retorno da requisição
+            success: function (data) {
+                if (!data.erro) {
+                    Swal.fire({
+                        title: '',
+                        text: 'ID' + data.msg.id + ', ' + data.msg.msg, icon: 'success', showCancelButton: false, confirmButtonColor: '#3085d6',
+
+                        cancelButtonColor: '#d33', confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.replace($SCRIPT_ROOT + "{{ url_for('produto.formListaProduto') }}");
+                        }
+                    })
+                }
+                else {
+                    Swal.fire(data.msgErro.msg, data.msgErro.erro, "error");
+                }
+            },
+            // manipular erros da requisição
+            error: function (e) {
+                console.log(e);
+            }
+        })
+    })
+
+
+</script>
+
+<script>
+    function img_pathUrl(input){
+        $('#imagem')[0].src = (window.URL ? URL : webkitURL).createObjectURL(input.files[0]);
+    }
+</script>
+
 
 {% endblock %}
