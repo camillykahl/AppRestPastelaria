@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}Clientes{% endblock %}
+{# ajusta as variáveis conforme novo ou edit #}
+{% set id = result[0].id_cliente if result else '0' %}
+{% set nome = result[0].nome if result else '' %}
+{% set cpf = result[0].cpf if result else '' %}
+{% set telefone = result[0].telefone if result else '' %}
+{% set compra_fiado = result[0].compra_fiado if result else '' %}
+{% set dia_fiado = result[0].dia_fiado if result else '' %}
+{% set senha = result[0].senha if result else '' %}
+
+
 {% block style %}
 <style>
     input:focus {
@@ -18,30 +28,30 @@
 {% endblock %}
 
 {% block content %}
-<form name="cliente" id="cliente" action="{{ url_for('cliente.insert') }}" method="POST">
-    <h1>Clientes</h1>
+<form  name="{{ 'formEditar' if result else 'formAdicionar' }}" id="{{ 'formEditar' if result else 'formAdicionar' }}" action="{{ url_for('cliente.edit') if result else url_for('cliente.insert') }}" method="POST">
+    <h1>Clientes  - {{ "%s: %s" % ('Editar Registro', id) if result else 'Novo' }}</h1>
     <div class="container-text-center">
         <div class="row">
             <div class="col-md">
                 <label for="id">Código:</label>
                 <br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    type="text" name="id" id="id" value="" placeholder="Código" readonly>
+                    type="text" name="id" id="id" value= "{{ id }}" placeholder="Código" readonly>
                 <br><br>
                 <label for="nome">Nome Cliente:</label>
                 <br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    type="text" name="nome" id="nome" value="" placeholder="Nome" maxlength="100" autofocus required>
+                    type="text" name="nome" id="nome" value= "{{nome}}" placeholder="Nome" maxlength="100" autofocus required>
                 <br><br>
                 <label for="cpf">CPF: </label>
                 <br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    type="text" name="cpf" id="cpf" value="" placeholder="CPF" maxlength="14" onkeyup="mascara_cpf()"
+                    type="text" name="cpf" id="cpf" value= "{{cpf}}" placeholder="CPF" maxlength="14" onkeyup="mascara_cpf()"
                     pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Digite um CPF no formato: xxx.xxx.xxx-xx" required>
                 <br><br>
                 <label for="telefone" class="form-label">Telefone:</label><br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    type="tel" name="telefone" onkeyup="mascaraTelefone(event)" id="telefone" value="" placeholder="Telefone" maxlength="15"
+                    type="tel" name="telefone" onkeyup="mascaraTelefone(event)" id="telefone" value= "{{telefone}}" placeholder="Telefone" maxlength="15"
                     autocomplete="off" pattern="\([0-9]{2}\)[\s][0-9]{4}-[0-9]{5}" title="Atenção! Utilize o seguinte formato: (12)1234-12345"
                     required>
                 <br><br>
@@ -50,6 +60,7 @@
                 <label for="compra">Compra fiado: </label><br>
                 <select onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
                     name="compra" id="compra" aria-label="compra">
+                    <option value="{{ compra_fiado}}" selected>{{ compra_fiado }}</option>
                     <option value="0">Sim</option>
                     <option value="1">Não</option>
                 </select>
@@ -57,11 +68,11 @@
                 <label for="date">Dia Fiado: </label>
                 <br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    style="width: 50px" type="number" name="dia" id="dia" value="" maxlength="2" required>
+                    style="width: 50px" type="number" name="dia" id="dia" value= "{{dia_fiado}}" maxlength="2" required>
                 <br><br>
                 <label for="senha">Senha:</label><br>
                 <input onmouseenter="this.style.background='lightblue';" onmouseleave="this.style.background='white';"
-                    minlength="8" type="password" name="senha" id="senha" autocomplete="on" value="" placeholder="Senha"
+                    minlength="8" type="password" name="senha" id="senha" autocomplete="on" value= "{{senha}}" placeholder="Senha"
                     required>
                 <br><br>
                 <label for="resenha">Confirmação de Senha:</label><br>
