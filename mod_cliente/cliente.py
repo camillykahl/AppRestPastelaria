@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 import requests
 from funcoes import Funcoes
+from mod_login.login import validaSessao
+
 bp_cliente = Blueprint('cliente', __name__, url_prefix="/cliente", template_folder='templates')
 ''' endereços do endpoint '''
 urlApiClientes= "http://localhost:8000/cliente/"
@@ -8,6 +10,7 @@ urlApiCliente = "http://localhost:8000/cliente/%s"
 headers = {'x-token': 'abcBolinhasToken', 'x-key': 'abcBolinhasKey'}
 ''' rotas dos formulários '''
 @bp_cliente.route('/', methods=['GET', 'POST'])
+@validaSessao
 def formListaCliente():
     try:
         response = requests.get(urlApiClientes, headers=headers)
@@ -20,6 +23,7 @@ def formListaCliente():
 
 
 @bp_cliente.route('/form-cliente/', methods=['GET', 'POST'])
+@validaSessao
 def formCliente():
     return render_template('formCliente.html')
 
@@ -44,6 +48,7 @@ def insert():
         return render_template('formListaCliente.html', msgErro=e)
 
 @bp_cliente.route("/form-edit-cliente", methods=['POST'])
+
 def formEditCliente():
     try:
 		# ID enviado via FORM
