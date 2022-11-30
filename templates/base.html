@@ -11,12 +11,7 @@
         .important {
             color: #6495ED;
         }
-        footer {
-          position: fixed;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-        }
+       
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.min.css') }}">
@@ -60,6 +55,9 @@
               <li class="nav-item">
                 <a class="nav-link active" href="{{ url_for('produto.formListaProduto') }}"><i class="fas fa-pizza-slice"></i> Produto </a>
               </li> 
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('login.logoff') }}"><i class="fas fa-door-open"></i> Sair</a>
+              </li>
             </ul>
             <form class="d-flex align-items-end " role="search">
                 <input class="form-control me-2 " type="search" placeholder="Search" aria-label="Search">
@@ -75,9 +73,9 @@
     </div>
     {% block footer %}
         <!--<a href="{{ url_for('index.formIndex') }}">&copy; 2022 by AbcBolinhas</a>-->
-        <footer class= "bg-dark text-center text-lg-start " style="position: relative;bottom:0; left: 0;">
+        <footer class= "bg-dark text-center text-lg-start " style="position: fixed;bottom:0; left: 0; width: 100%;">
   
-            <div class="text-start p-3" style="background-color: rgba(0, 0, 0, 0.2); ">
+            <div class="text-start p-3" style="background-color: rgba(0, 0, 0, 0.2);">
               <a class="text-light" style="text-decoration: none;" href="{{ url_for('index.formIndex') }}">&copy; 2022 by AbcBolinhas</a>
             </div>
             
