@@ -28,7 +28,7 @@ def validaLogin():
 
             # abre a aplicação na tela home
             return redirect(url_for('index.formIndex'))
-        elif( cpf == "123.123.123-32" and senha == Funcoes.cifraSenha('12345678') ):
+        elif( cpf == "123.123.321-32" and senha == Funcoes.cifraSenha('12345678') ):
             session['login'] = nomes[1]
             session['cpf'] = cpf
             session['grupo'] = grupo[2]
