@@ -1,45 +1,40 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
+import requests
 from funcoes import Funcoes
 from functools import wraps
 
 
 bp_login = Blueprint('login', __name__, url_prefix='/', template_folder='templates')
+urlApiFuncionarios = "http://localhost:8000/funcionario/login/"
+urlApiFuncionario = "http://localhost:8000/funcionario/%s"
+headers = {'x-token': 'abcBolinhasToken', 'x-key': 'abcBolinhasKey'}
+
 @bp_login.route("/", methods=['GET', 'POST'])
 def login():
 	return render_template("formLogin.html")
 @bp_login.route('/login', methods=['POST'])
 def validaLogin():
-    try:
-        # dados enviados via FORM
-        cpf = request.form['usuario']
-        senha = Funcoes.cifraSenha(request.form['senha'])
-        nomes = ["Pedro","João" ]
-        grupo = ["Atendente (0)", "Caixa (1)","Administrador (2)"]
-
-        # limpa a sessão
-        session.clear()
-        # Na minha aplicação somente dois funcionários diferentes que se cadastraram podem se logar 
-        if (cpf == "536.528.923-65" and senha == Funcoes.cifraSenha('12345678')  ):
-            # registra usuário na sessão, armazenando o login do usuário
-            session['login'] = nomes[0] 
-            session['cpf'] = cpf
-            session['grupo'] = grupo[1]
-            
-
-            # abre a aplicação na tela home
-            return redirect(url_for('index.formIndex'))
-        elif( cpf == "123.123.321-32" and senha == Funcoes.cifraSenha('12345678') ):
-            session['login'] = nomes[1]
-            session['cpf'] = cpf
-            session['grupo'] = grupo[2]
-
-            return redirect(url_for('index.formIndex'))
-        else:
-            raise Exception("Falha de Login! As credenciais estão erradas")
-
-    except Exception as e:
-        # retorna para a tela de login
-        return redirect(url_for('login.login', msgErro=e.args[0]))  
+	try:
+		# dados enviados via FORM
+		cpf = request.form['usuario']
+		senha = Funcoes.cifraSenha(request.form['senha'])
+		# monta o JSON para envio a API
+		payload = {'id_funcionario': 0, 'nome': '', 'matricula': '', 'cpf': cpf, 'telefone': '', 'grupo': 0, 'senha': senha}
+		# executa o verbo POST da API e armazena seu retorno
+		response = requests.post(urlApiFuncionarios, headers=headers, json=payload)
+		result = response.json()
+		if (response.status_code != 200 or result[1] != 200):
+			raise Exception(result[0])
+			# limpa a sessão atual e registra usuário na sessão, armazenando o login do usuário
+		session.clear()
+		session['nome'] = result[0]['nome']
+		session['login'] = result[0]['cpf']
+		session['grupo'] = result[0]['grupo']
+		# abre a aplicação na tela home
+		return redirect(url_for('index.formIndex'))
+	except Exception as e:
+		# retorna para a tela de login
+		return redirect(url_for('login.login', msgErro="Falha de Login! Verifique seus dados e tente novamente!", msgException=e.args[0]))
 
 @bp_login.route("/logoff", methods=['GET'])
 def logoff():

@@ -13,25 +13,24 @@
 <br>
 <form action="{{ url_for('login.validaLogin') }}" method="post">
     <div class="container text-center">
-        <h1>Login: </h1>   
-    <label class="sr-only" for="cpf">CPF: </label>
-    <input placeholder="CPF" id="cpf" name="usuario" type="text" value="" onkeyup="mascara_cpf()">
-    <br>
-    <br>
-    
-    <label class="sr-only" for="senha">Senha: </label>
-    <input placeholder="Senha" name="senha" type="password" value="" autocomplete="on">
-    <br>
-    <br>
-    <input type="submit" value="Login"  class="btn btn-outline-success">
-    </div>    
+        <h1>Login: </h1>
+        <label class="sr-only" for="cpf">CPF: </label>
+        <input placeholder="CPF" id="cpf" name="usuario" type="text" value="" onkeyup="mascara_cpf()" autofocus required>
+        <br>
+        <br>
+
+        <label class="sr-only" for="senha">Senha: </label>
+        <input placeholder="Senha" name="senha" type="password" value="" autocomplete="on" required>
+        <br>
+        <br>
+        <input type="submit" value="Login" class="btn btn-outline-success">
+    </div>
 </form>
 
 {% endblock %}
-
 {% block js %}
 <script>
-    function mascara_cpf() {
+     function mascara_cpf() {
         var cpf = document.getElementById('cpf')
         if (cpf.value.length == 3 || cpf.value.length == 7) {
             cpf.value += "."

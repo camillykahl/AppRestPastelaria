@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 import requests
 from funcoes import Funcoes
 from mod_login.login import validaSessao
+from mod_cliente.GeraPdf import PDF
+from flask import send_file
 
 bp_cliente = Blueprint('cliente', __name__, url_prefix="/cliente", template_folder='templates')
 ''' endereços do endpoint '''
@@ -104,3 +106,10 @@ def delete():
 	except Exception as e:
 		#return render_template('formListaCliente.html', msgErro=e.args[0])
 		return jsonify(erro=True, msgErro=e.args[0])
+		
+@bp_cliente.route('/pdfTodos', methods=['POST'])
+@validaSessao
+def pdfTodos():
+	geraPdf = PDF()
+	geraPdf.listaTodos()
+	return send_file('pdfClientes.pdf')
