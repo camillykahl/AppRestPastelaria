@@ -5,18 +5,12 @@
 {% block content %}
 <h1>Home</h1>
 <p class="important text-center">Seja bem vindo!</p>
-{% if 'login' in session %}
-Bem-vindo <b>{{ session['login'] }} </b>
-{% endif %}
-<br>
-{% if 'grupo' in session %}
-Grupo: <b>{{ session['grupo'] }} </b>
-{% endif %}
-<br>
-{% if 'cpf' in session %}
-CPF: <b>{{ session['cpf'] }} </b>
-{% endif %}
 
-
+        <p>
+            {% if 'login' in session %}
+            Bem vindo!! <br>
+            Nome: <b>{{ session['nome'] }}</b><br> Grupo: <b>{{ session['grupo'] }}</b><br> CPF: <b> {{ session['login'] }} </b> 
+            {% endif %}
+        </p>
  
 {% endblock %}
